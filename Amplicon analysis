@@ -4,10 +4,135 @@ conda update -n base -c conda-forge conda
 conda activate qiime2-amplicon-2024.5
 
 
-#ITS1-5F analysis
+###ITS1-5F analysis
+
+#Raw reads are imported through the Manifest format for each sample at the beggining. As the pipeline advances, all the samples will be merged
+#with one another (aguamiel with aguamiel, pulque joven with pulquen joven and so forth...) The Manifests used are available as text files.
+
+qiime tools import --type 'SampleData[PairedEndSequencesWithQuality]' --input-path AIIITmanifest.txt --output-path pairedenddemuxAIIIT.qza --input-format PairedEndFastqManifestPhred33V2
+qiime tools import --type 'SampleData[PairedEndSequencesWithQuality]' --input-path AITmanifest.txt --output-path pairedenddemuxAIT.qza --input-format PairedEndFastqManifestPhred33V2
+qiime tools import --type 'SampleData[PairedEndSequencesWithQuality]' --input-path AIVTmanifest.txt --output-path pairedenddemuxAIVT.qza --input-format PairedEndFastqManifestPhred33V2
+qiime tools import --type 'SampleData[PairedEndSequencesWithQuality]' --input-path AVIITmanifest.txt --output-path pairedenddemuxAVIIT.qza --input-format PairedEndFastqManifestPhred33V2
+qiime tools import --type 'SampleData[PairedEndSequencesWithQuality]' --input-path PSIIITmanifest.txt --output-path pairedenddemuxPSIIIT.qza --input-format PairedEndFastqManifestPhred33V2
+qiime tools import --type 'SampleData[PairedEndSequencesWithQuality]' --input-path PSITmanifest.txt --output-path pairedenddemuxPSIT.qza --input-format PairedEndFastqManifestPhred33V2
+qiime tools import --type 'SampleData[PairedEndSequencesWithQuality]' --input-path PSIVTmanifest.txt --output-path pairedenddemuxPSIVT.qza --input-format PairedEndFastqManifestPhred33V2
+qiime tools import --type 'SampleData[PairedEndSequencesWithQuality]' --input-path PSVIITmanifest.txt --output-path pairedenddemuxPSVIIT.qza --input-format PairedEndFastqManifestPhred33V2
+qiime tools import --type 'SampleData[PairedEndSequencesWithQuality]' --input-path PYVIITmanifest.txt --output-path pairedenddemuxPYVIIT.qza --input-format PairedEndFastqManifestPhred33V2
+qiime tools import --type 'SampleData[PairedEndSequencesWithQuality]' --input-path PYIVTmanifest.txt --output-path pairedenddemuxPYIVT.qza --input-format PairedEndFastqManifestPhred33V2
+qiime tools import --type 'SampleData[PairedEndSequencesWithQuality]' --input-path PYITmanifest.txt --output-path pairedenddemuxPYIT.qza --input-format PairedEndFastqManifestPhred33V2
+qiime tools import --type 'SampleData[PairedEndSequencesWithQuality]' --input-path PYIIITmanifest.txt --output-path pairedenddemuxPYIIIT.qza --input-format PairedEndFastqManifestPhred33V2
+
+#Samples were delivered demultiplexed by the sequencing supplier to us. Next, visualizations will be created for each of the artifacts generated 
+#previously to determine the best trimming conditions, together with FastQC analysis. IMPORTANT: _1 relates to the forward strand and _2 relates to the
+#reverse DNA strand for the amplified region (ITS1-5F, in this case).
+
+qiime demux summarize --i-data pairedendemuxAIIIT.qza --o-visualization demuxexitAIIIT.qzv
+fastqc AIIIT_1.fastq
+fastqc AIIIT_2.fastq
+qiime demux summarize --i-data pairedendemuxAIT.qza --o-visualization demuxexitAIT.qzv
+fastqc AIT_1.fastq
+fastqc AIT_2.fastq
+qiime demux summarize --i-data pairedendemuxAIVT.qza --o-visualization demuxexitAIVT.qzv
+fastqc AIVT_1.fastq
+fastqc AIVT_2.fastq
+qiime demux summarize --i-data pairedendemuxAVIIT.qza --o-visualization demuxexitAVIIT.qzv
+fastqc AVIIT_1.fastq
+fastqc AVIIT_2.fastq
+qiime demux summarize --i-data pairedendemuxPSIIIT.qza --o-visualization demuxexitPSIIIT.qzv
+fastqc PSIIIT_1.fastq
+fastqc PSIIIT_2.fastq
+qiime demux summarize --i-data pairedendemuxPSIT.qza --o-visualization demuxexitPSIT.qzv
+fastqc PSIT_1.fastq
+fastqc PSIT_2.fastq
+qiime demux summarize --i-data pairedendemuxPSIVT.qza --o-visualization demuxexitPSIVT.qzv
+fastqc PSIVT_1.fastq
+fastqc PSIVT_2.fastq
+qiime demux summarize --i-data pairedendemuxPSVIIT.qza --o-visualization demuxexitPSVIIT.qzv
+fastqc PSVIIT_1.fastq
+fastqc PSVIIT_2.fastq
+qiime demux summarize --i-data pairedendemuxPYVIIT.qza --o-visualization demuxexitPYVIIT.qzv
+fastqc PYVIIT_1.fastq
+fastqc PYVIIT_2.fastq
+qiime demux summarize --i-data pairedendemuxPYIVT.qza --o-visualization demuxexitPYIVT.qzv
+fastqc PYIVT_1.fastq
+fastqc PYIVT_2.fastq
+qiime demux summarize --i-data pairedendemuxPYIT.qza --o-visualization demuxexitPYIT.qzv
+fastqc PYIT_1.fastq
+fastqc PYIT_2.fastq
+qiime demux summarize --i-data pairedendemuxPYIIIT.qza --o-visualization demuxexitPYIIIT.qzv
+fastqc PYIIIT_1.fastq
+fastqc PYIIIT_2.fastq
+
+#In the Denoising stage, DADA2 will be employed to filter out sequences, remove chimeras, denoise paired-end sequnences, trimm each raw read and 
+#finally merge them.
+
+qiime dada2 denoise-paired --i-demultiplexed-seqs pairedenddemuxAIIIT.qza --p-trim-left-f 9 --p-trim-left-r 9 --p-trunc-len-f 218 --p-trunc-len-r 218 --o-table AIIITtable.qza --o-representative-sequences AIIITrep-seqs.qza --o-denoising-stats AIIITdenoising-stats.qza
+qiime feature-table summarize --i-table AIIITtable.qza --o-visualization AIIITtable.qzv
+qiime feature-table tabulate-seqs --i-data AIIITrep-seqs.qza --o-visualization AIIITrep-seqs.qzv
+qiime metadata tabulate --m-input-file AIIITdenoising-stats.qza --o-visualization AIIITdenoising-stats.qzv
+
+qiime dada2 denoise-paired --i-demultiplexed-seqs pairedenddemuxAIT.qza --p-trim-left-f 9 --p-trim-left-r 9 --p-trunc-len-f 218 --p-trunc-len-r 218 --o-table AITtable.qza --o-representative-sequences AITrep-seqs.qza --o-denoising-stats AITdenoising-stats.qza
+qiime feature-table summarize --i-table AITtable.qza --o-visualization AITtable.qzv
+qiime feature-table tabulate-seqs --i-data AITrep-seqs.qza --o-visualization AITrep-seqs.qzv
+qiime metadata tabulate --m-input-file AITdenoising-stats.qza --o-visualization AITdenoising-stats.qzv
+
+qiime dada2 denoise-paired --i-demultiplexed-seqs pairedenddemuxAIVT.qza --p-trim-left-f 9 --p-trim-left-r 9 --p-trunc-len-f 218 --p-trunc-len-r 218 --o-table AIVTtable.qza --o-representative-sequences AIVTrep-seqs.qza --o-denoising-stats AIVTdenoising-stats.qza
+qiime feature-table summarize --i-table AIVTtable.qza --o-visualization AIVTtable.qzv
+qiime feature-table tabulate-seqs --i-data AIVTrep-seqs.qza --o-visualization AIVTrep-seqs.qzv
+qiime metadata tabulate --m-input-file AIVTdenoising-stats.qza --o-visualization AIVTdenoising-stats.qzv
+
+qiime dada2 denoise-paired --i-demultiplexed-seqs pairedenddemuxAVIIT.qza --p-trim-left-f 9 --p-trim-left-r 9 --p-trunc-len-f 218 --p-trunc-len-r 218 --o-table AVIITtable.qza --o-representative-sequences AVIITrep-seqs.qza --o-denoising-stats AVIITdenoising-stats.qza
+qiime feature-table summarize --i-table AVIITtable.qza --o-visualization AVIITtable.qzv
+qiime feature-table tabulate-seqs --i-data AVIITrep-seqs.qza --o-visualization AVIITrep-seqs.qzv
+qiime metadata tabulate --m-input-file AVIITdenoising-stats.qza --o-visualization AVIITdenoising-stats.qzv
+
+qiime dada2 denoise-paired --i-demultiplexed-seqs pairedenddemuxPSIT.qza --p-trim-left-f 9 --p-trim-left-r 9 --p-trunc-len-f 218 --p-trunc-len-r 218 --o-table PSITtable.qza --o-representative-sequences PSITrep-seqs.qza --o-denoising-stats PSITdenoising-stats.qza
+qiime feature-table summarize --i-table PSITtable.qza --o-visualization PSITtable.qzv
+qiime feature-table tabulate-seqs --i-data PSITrep-seqs.qza --o-visualization PSITrep-seqs.qzv
+qiime metadata tabulate --m-input-file PSITdenoising-stats.qza --o-visualization PSITdenoising-stats.qzv
+
+qiime dada2 denoise-paired --i-demultiplexed-seqs pairedenddemuxPSIIIT.qza --p-trim-left-f 9 --p-trim-left-r 9 --p-trunc-len-f 218 --p-trunc-len-r 218 --o-table PSIIITtable.qza --o-representative-sequences PSIIITrep-seqs.qza --o-denoising-stats PSIIITdenoising-stats.qza
+qiime feature-table summarize --i-table PSIIITtable.qza --o-visualization PSIIITtable.qzv
+qiime feature-table tabulate-seqs --i-data PSIIITrep-seqs.qza --o-visualization PSIIITrep-seqs.qzv
+qiime metadata tabulate --m-input-file PSIIITdenoising-stats.qza --o-visualization PSIIITdenoising-stats.qzv
+
+qiime dada2 denoise-paired --i-demultiplexed-seqs pairedenddemuxPSIVT.qza --p-trim-left-f 9 --p-trim-left-r 9 --p-trunc-len-f 218 --p-trunc-len-r 218 --o-table PSIVTtable.qza --o-representative-sequences PSIVTrep-seqs.qza --o-denoising-stats PSIVTdenoising-stats.qza
+qiime feature-table summarize --i-table PSIVTtable.qza --o-visualization PSIVTtable.qzv
+qiime feature-table tabulate-seqs --i-data PSIVTrep-seqs.qza --o-visualization PSIVTrep-seqs.qzv
+qiime metadata tabulate --m-input-file PSIVTdenoising-stats.qza --o-visualization PSIVTdenoising-stats.qzv
+
+qiime dada2 denoise-paired --i-demultiplexed-seqs pairedenddemuxPSVIIT.qza --p-trim-left-f 9 --p-trim-left-r 9 --p-trunc-len-f 218 --p-trunc-len-r 218 --o-table PSVIITtable.qza --o-representative-sequences PSVIITrep-seqs.qza --o-denoising-stats PSVIITdenoising-stats.qza
+qiime feature-table summarize --i-table PSVIITtable.qza --o-visualization PSVIITtable.qzv
+qiime feature-table tabulate-seqs --i-data PSVIITrep-seqs.qza --o-visualization PSVIITrep-seqs.qzv
+qiime metadata tabulate --m-input-file PSVIITdenoising-stats.qza --o-visualization PSVIITdenoising-stats.qzv
+
+qiime dada2 denoise-paired --i-demultiplexed-seqs pairedenddemuxPYIT.qza --p-trim-left-f 9 --p-trim-left-r 9 --p-trunc-len-f 218 --p-trunc-len-r 218 --o-table PYITtable.qza --o-representative-sequences PYITrep-seqs.qza --o-denoising-stats PYITdenoising-stats.qza
+qiime feature-table summarize --i-table PYITtable.qza --o-visualization PYITtable.qzv
+qiime feature-table tabulate-seqs --i-data PYITrep-seqs.qza --o-visualization PYITrep-seqs.qzv
+qiime metadata tabulate --m-input-file PYITdenoising-stats.qza --o-visualization PYITdenoising-stats.qzv
+
+qiime dada2 denoise-paired --i-demultiplexed-seqs pairedenddemuxPYIIIT.qza --p-trim-left-f 9 --p-trim-left-r 9 --p-trunc-len-f 218 --p-trunc-len-r 218 --o-table PYIIITtable.qza --o-representative-sequences PYIIITrep-seqs.qza --o-denoising-stats PYIIITdenoising-stats.qza
+qiime feature-table summarize --i-table PYIIITtable.qza --o-visualization PYIIITtable.qzv
+qiime feature-table tabulate-seqs --i-data PYIIITrep-seqs.qza --o-visualization PYIIITrep-seqs.qzv
+qiime metadata tabulate --m-input-file PYIIITdenoising-stats.qza --o-visualization PYIIITdenoising-stats.qzv
+
+qiime dada2 denoise-paired --i-demultiplexed-seqs pairedenddemuxPYIVT.qza --p-trim-left-f 9 --p-trim-left-r 9 --p-trunc-len-f 218 --p-trunc-len-r 218 --o-table PYIVTtable.qza --o-representative-sequences PYIVTrep-seqs.qza --o-denoising-stats PYIVTdenoising-stats.qza
+qiime feature-table summarize --i-table PYIVTtable.qza --o-visualization PYIVTtable.qzv
+qiime feature-table tabulate-seqs --i-data PYIVTrep-seqs.qza --o-visualization PYIVTrep-seqs.qzv
+qiime metadata tabulate --m-input-file PYIVTdenoising-stats.qza --o-visualization PYIVTdenoising-stats.qzv
+
+qiime dada2 denoise-paired --i-demultiplexed-seqs pairedenddemuxPYVIIT.qza --p-trim-left-f 9 --p-trim-left-r 9 --p-trunc-len-f 218 --p-trunc-len-r 218 --o-table PYVIITtable.qza --o-representative-sequences PYVIITrep-seqs.qza --o-denoising-stats PYVIITdenoising-stats.qza
+qiime feature-table summarize --i-table PYVIITtable.qza --o-visualization PYVIITtable.qzv
+qiime feature-table tabulate-seqs --i-data PYVIITrep-seqs.qza --o-visualization PYVIITrep-seqs.qzv
+qiime metadata tabulate --m-input-file PYVIITdenoising-stats.qza --o-visualization PYVIITdenoising-stats.qzv
+
+#ITS Taxonomy 
+
+#UNITE database (v.10.0) will be used to train a "classify-sklearn" classifier with a Naive-Bayes classifier. Fasta (representative sequences)
+#and .txt (taxonomy files) are downloaded from the developer file of the database to start the classifier training as follows:
+
+qiime tools import --type 'FeatureData[Sequence]' --input-path sh_refs_qiime_ver10_dynamic_04.04.2024_dev.fasta --output-path sh_refs_qiime_ver10_dynamic_04.04-2024_dev.qza
+qiime tools import --type 'FeatureData[Taxonomy]' --input-format HeadrelessTSVTaxonomyFormat --input-path sh_taxonomy_qiime_ver10_dynamic_04.04.2024_de.txt --output-path ref-unitedev-taxonomy.qza
 
 
-
-
-
-#V3-V4 analysis
+### V3-V4 analysis
