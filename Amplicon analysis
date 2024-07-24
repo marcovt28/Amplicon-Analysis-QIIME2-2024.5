@@ -1,3 +1,9 @@
+#Conda and QIIME2 update or activation 
+
+conda update -n base -c conda-forge conda
+conda activate qiime2-amplicon-2024.5
+
+
 #ITS1-5F analysis
 
 
