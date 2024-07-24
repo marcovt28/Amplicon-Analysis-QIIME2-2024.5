@@ -1,0 +1,2 @@
+sample-id	forward-absolute-filepath	reverse-absolute-filepath
+PYIVT	/home/marco/its/PYIVT_1.fastq	/home/marco/its/PYIVT_2.fastq

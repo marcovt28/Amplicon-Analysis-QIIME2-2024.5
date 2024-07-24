@@ -1,0 +1,2 @@
+sample-id	forward-absolute-filepath	reverse-absolute-filepath
+AVIIT	/home/marco/its/AVIIT_1.fastq	/home/marco/its/AVIIT_2.fastq

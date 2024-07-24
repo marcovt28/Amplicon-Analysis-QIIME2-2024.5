@@ -1,0 +1,2 @@
+sample-id	forward-absolute-filepath	reverse-absolute-filepath
+PSIIIT	/home/marco/its/PSIIIT_1.fastq	/home/marco/its/PSIIIT_2.fastq

@@ -1,0 +1,2 @@
+sample-id	forward-absolute-filepath	reverse-absolute-filepath
+PYIT	/home/marco/its/PYIT_1.fastq	/home/marco/its/PYIT_2.fastq
