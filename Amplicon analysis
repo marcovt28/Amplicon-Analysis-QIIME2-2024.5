@@ -225,5 +225,24 @@ qiime diversity alpha --i-table pulquestartersamplestable.qza --p-metric chao1 -
 qiime diversity alpha-group-significance --i-alpha-diversity chao1pulquestarterits.qza --m-metadata-file pulquestarter\ metadata.tsv --o-visualization chao1pulquestarterits.qzv
 
 #Shannon-Wiener
+qiime diversity alpha --i-table aguamielsamplestable.qza --p-metric shannon --o-alpha-diversity shannonaguamielits.qza
+qiime diversity alpha-group-signficance --i-alpha-diversity shannonaguamielits.qza --m-metadata-file aguamiel\ metedata.tsv --o-visualization shannonguamielits.qzv
+
+qiime diversity alpha --i-table pulquejovensamplestable.qza --p-metric shannon --o-alpha-diversity shannonpulquejovenits.qza
+qiime diversity alpha-group-significance --i-alpha-diversity shannonpulquejovenits.qza --m-metadata-file pulquejoven\ metadata.tsv --o-visualization shannonpulquejovenits.qzv
+
+qiime diversity alpha --i-table pulquestartersamplestable.qza --p-metric shannon --o-alpha-diversity shannonpulquestarterits.qza 
+qiime diversity alpha-group-significance --i-alpha-diversity shannonpulquestarterits.qza --m-metadata-file pulquestarter\ metadata.tsv --o-visualization shannonpulquestarterits.qzv
+
+#Simpson Evenness
+qiime diversity alpha --i-table aguamielsamplestable.qza --p-metric simpson_e --o-alpha-diversity simpsonaguamielits.qza 
+qiime dviersity alpha-group-significance --i-alpha-diversity simpsonaguamielits.qza --m-metadata-file aguamiel\ metadata.tsv --o-visualization simpsonaguamielits.qzv
+
+qiime diversity alpha --i-table pulquejovensamplestable.qza --p-metric simpson_e --o-alpha-diversity simpsonpulquejovenits.qza
+qiime diversity alpha-group-significance --i-alpha-diversity simpsonpulquejovenits.qza --m-metadata-file pulquejoven\ metadata.tsv --o-visualization simpsonpulquejovenits.qzv
+
+qiime diversity alpha --i-table pulquestartersamplestable.qza --p-metric simpson_e --o-alpha-diversity simpsonpulquestarterits.qza
+qiime diversity alpha-group-significance --i-alpha-diversity simpsonpulquestarterits.qza --m-metadata-file pulquestarter\ metadata.tsv --o-visualization simpsonpulquestarteritrs.qzv
+
 
 ### V3-V4 analysis
