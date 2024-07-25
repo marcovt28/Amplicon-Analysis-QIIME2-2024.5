@@ -7,7 +7,8 @@ conda activate qiime2-amplicon-2024.5
 ###ITS1-5F analysis
 
 #Raw reads are imported through the Manifest format for each sample at the beggining. As the pipeline advances, all the samples will be merged
-#with one another (aguamiel with aguamiel, pulque joven with pulquen joven and so forth...) The Manifests used are available as text files.
+#with one another (aguamiel with aguamiel (A), pulque joven with pulquen joven (PY) and pulque starter o semilla with 
+#pulque starter o semilla (PS)...) The Manifests used are available as text files.
 
 qiime tools import --type 'SampleData[PairedEndSequencesWithQuality]' --input-path AIIITmanifest.txt --output-path pairedenddemuxAIIIT.qza --input-format PairedEndFastqManifestPhred33V2
 qiime tools import --type 'SampleData[PairedEndSequencesWithQuality]' --input-path AITmanifest.txt --output-path pairedenddemuxAIT.qza --input-format PairedEndFastqManifestPhred33V2
@@ -133,6 +134,39 @@ qiime metadata tabulate --m-input-file PYVIITdenoising-stats.qza --o-visualizati
 
 qiime tools import --type 'FeatureData[Sequence]' --input-path sh_refs_qiime_ver10_dynamic_04.04.2024_dev.fasta --output-path sh_refs_qiime_ver10_dynamic_04.04-2024_dev.qza
 qiime tools import --type 'FeatureData[Taxonomy]' --input-format HeadrelessTSVTaxonomyFormat --input-path sh_taxonomy_qiime_ver10_dynamic_04.04.2024_de.txt --output-path ref-unitedev-taxonomy.qza
+
+qiime feature-classifier fit-classifier-naive-bayes --i-reference-reads sh_refs_qiime_ver10_dynamic_04-04.2024_dev.qza --i-reference-taxonomy ref-unitedev-taxonomy.qza --o-classifier classifierunitedev.qza
+
+#The created rep-seqs an tables are merged by sample: AIIIT, AIT, AIVT and AVIIT into one rep-seqs and table file (with its respecetive .qzv 
+#archives). The same is done for PS and PY. This will simplify all the analysis from this point and beyond.
+
+qiime feature-table merge --i-tables AIIITtable.qza --i-tables AITtable.qza --i-tables AIVTtable.qza --i-tables AVIITtable.qza --o-merged-table aguamielsamplestable.qza
+qiime feature-table summarize --i-table aguamielsamplestable.qza --o-visualization aguamielsamplestable.qzv
+
+qiime feature-table merge-seqs --i-data AIIITrep-seqs.qza --i-data AITrep-seqs.qza --i-data AIVTrep-seqs.qza --i-data AVIITrep-seqs.qza --o-merged-data aguamielsamplesarep-seqs.qza
+qiime feature-table tabulate-seqs --i-data aguamielsamplesarep-seqs.qza --o-visualization aguamielsamplesarep-seqs.qzv
+
+qiime feature-table merge --i-tables PSIIITtable.qza --i-tables PSITtable.qza --i-tables PSIVTtable.qza --i-tables PSVIITtable.qza --o-merged-table pulquesemillasamplestable.qza
+qiime feature-table summarize --i-table pulquesemillasamplestable.qza --o-visualization pulquesemillasamplestable.qzv
+
+qiime feature-table merge-seqs --i-data PSIIITrep-seqs.qza --i-data PSITrep-seqs.qza --i-tables PSIVTrep-seqs.qza --i-data PSVIITrep-seqs.qza --o-merged-data pulquesemillasamplesrep-seqs.qza
+qiime feature-table tabulate-seqs --i-data pulquesemillasamplesrep-seqs.qza --o-visualization pulquesemillasamplesrep-seqs.qzv
+
+qiime feature-table merge --i-tables PYITtable.qza --i-tables PYIIITtable.qza --i-tables PYVIITtable.qza --i-table PYIVTtable.qza --o-merged-table pulquejovensamplestables.qza
+qiime feature-table summarize --i-table pulquejovensamplestable.qza --o-visualization pulquejovensamplestable.qzv
+
+qiime feature-table merge-seqs --i-data PYITrep-seqs.qza --i-data PYIIITrep-seqs.qza --i-data PYIVTrep-seqs.qza --i-data PYVIITrep-seqs.qza --o-merged-data pulquejovensamplesrep-seqs.qza
+qiime feature-table tabulate-seqs --i-data pulquejovensamplesrep-seqs.qza --o-visualization pulquejovensamplesrep-seqs.qzv 
+
+#Metadata is associated to each table.qzv created as follows:
+
+qiime feature-table summarize --i-table aguamielsamplestable.qza --o-visualization aguamielsamplestable.qzv --m-sample-metadata-file aguamiel\ metadata.tsv
+
+qiime feature-table summarize --i-table pulquejovensamplestable.qza --o-visualization pulquejovensamplestable.qzv --m-sample-metadata-file pulquejoven\ metadata.tsv
+
+qiime feature-table summarize --i-table pulquesemillasamplestable.qza --o-visualization pulquestartersamplestable.qzv --m-sample-metadata-file pulquesemilla\ metadata.tsv
+
+
 
 
 ### V3-V4 analysis
