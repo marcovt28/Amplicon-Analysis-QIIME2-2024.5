@@ -246,3 +246,247 @@ qiime diversity alpha-group-significance --i-alpha-diversity simpsonpulquestarte
 
 
 ### V3-V4 analysis
+
+#Conda and QIIME2 update or activation 
+
+conda update -n base -c conda-forge conda
+conda activate qiime2-amplicon-2024.5
+
+#Raw reads are imported through the Manifest format for each sample at the beggining. As the pipeline advances, all the samples will be merged
+#with one another (aguamiel with aguamiel (A), pulque joven with pulquen joven (PY) and pulque starter o semilla with 
+#pulque starter o semilla (PS)...) The Manifests used are available as text files.
+
+qiime tools import --type 'SampleData[PairedEndSequencesWithQuality]' --input-path AIIITmanifest.txt --output-path pairedenddemuxAIIIT.qza --input-format PairedEndFastqManifestPhred33V2
+qiime tools import --type 'SampleData[PairedEndSequencesWithQuality]' --input-path AITmanifest.txt --output-path pairedenddemuxAIT.qza --input-format PairedEndFastqManifestPhred33V2
+qiime tools import --type 'SampleData[PairedEndSequencesWithQuality]' --input-path AIVTmanifest.txt --output-path pairedenddemuxAIVT.qza --input-format PairedEndFastqManifestPhred33V2
+qiime tools import --type 'SampleData[PairedEndSequencesWithQuality]' --input-path AVIITmanifest.txt --output-path pairedenddemuxAVIIT.qza --input-format PairedEndFastqManifestPhred33V2
+qiime tools import --type 'SampleData[PairedEndSequencesWithQuality]' --input-path PSIIITmanifest.txt --output-path pairedenddemuxPSIIIT.qza --input-format PairedEndFastqManifestPhred33V2
+qiime tools import --type 'SampleData[PairedEndSequencesWithQuality]' --input-path PSITmanifest.txt --output-path pairedenddemuxPSIT.qza --input-format PairedEndFastqManifestPhred33V2
+qiime tools import --type 'SampleData[PairedEndSequencesWithQuality]' --input-path PSIVTmanifest.txt --output-path pairedenddemuxPSIVT.qza --input-format PairedEndFastqManifestPhred33V2
+qiime tools import --type 'SampleData[PairedEndSequencesWithQuality]' --input-path PSVIITmanifest.txt --output-path pairedenddemuxPSVIIT.qza --input-format PairedEndFastqManifestPhred33V2
+qiime tools import --type 'SampleData[PairedEndSequencesWithQuality]' --input-path PYVIITmanifest.txt --output-path pairedenddemuxPYVIIT.qza --input-format PairedEndFastqManifestPhred33V2
+qiime tools import --type 'SampleData[PairedEndSequencesWithQuality]' --input-path PYIVTmanifest.txt --output-path pairedenddemuxPYIVT.qza --input-format PairedEndFastqManifestPhred33V2
+qiime tools import --type 'SampleData[PairedEndSequencesWithQuality]' --input-path PYITmanifest.txt --output-path pairedenddemuxPYIT.qza --input-format PairedEndFastqManifestPhred33V2
+qiime tools import --type 'SampleData[PairedEndSequencesWithQuality]' --input-path PYIIITmanifest.txt --output-path pairedenddemuxPYIIIT.qza --input-format PairedEndFastqManifestPhred33V2
+
+#Samples were delivered demultiplexed by the sequencing supplier to us. Next, visualizations will be created for each of the artifacts generated 
+#previously to determine the best trimming conditions, together with FastQC analysis. IMPORTANT: _1 relates to the forward strand and _2 relates to the
+#reverse DNA strand for the amplified region (ITS1-5F, in this case).
+
+qiime demux summarize --i-data pairedendemuxAIIIT.qza --o-visualization demuxexitAIIIT.qzv
+fastqc AIIIT_1.fastq
+fastqc AIIIT_2.fastq
+qiime demux summarize --i-data pairedendemuxAIT.qza --o-visualization demuxexitAIT.qzv
+fastqc AIT_1.fastq
+fastqc AIT_2.fastq
+qiime demux summarize --i-data pairedendemuxAIVT.qza --o-visualization demuxexitAIVT.qzv
+fastqc AIVT_1.fastq
+fastqc AIVT_2.fastq
+qiime demux summarize --i-data pairedendemuxAVIIT.qza --o-visualization demuxexitAVIIT.qzv
+fastqc AVIIT_1.fastq
+fastqc AVIIT_2.fastq
+qiime demux summarize --i-data pairedendemuxPSIIIT.qza --o-visualization demuxexitPSIIIT.qzv
+fastqc PSIIIT_1.fastq
+fastqc PSIIIT_2.fastq
+qiime demux summarize --i-data pairedendemuxPSIT.qza --o-visualization demuxexitPSIT.qzv
+fastqc PSIT_1.fastq
+fastqc PSIT_2.fastq
+qiime demux summarize --i-data pairedendemuxPSIVT.qza --o-visualization demuxexitPSIVT.qzv
+fastqc PSIVT_1.fastq
+fastqc PSIVT_2.fastq
+qiime demux summarize --i-data pairedendemuxPSVIIT.qza --o-visualization demuxexitPSVIIT.qzv
+fastqc PSVIIT_1.fastq
+fastqc PSVIIT_2.fastq
+qiime demux summarize --i-data pairedendemuxPYVIIT.qza --o-visualization demuxexitPYVIIT.qzv
+fastqc PYVIIT_1.fastq
+fastqc PYVIIT_2.fastq
+qiime demux summarize --i-data pairedendemuxPYIVT.qza --o-visualization demuxexitPYIVT.qzv
+fastqc PYIVT_1.fastq
+fastqc PYIVT_2.fastq
+qiime demux summarize --i-data pairedendemuxPYIT.qza --o-visualization demuxexitPYIT.qzv
+fastqc PYIT_1.fastq
+fastqc PYIT_2.fastq
+qiime demux summarize --i-data pairedendemuxPYIIIT.qza --o-visualization demuxexitPYIIIT.qzv
+fastqc PYIIIT_1.fastq
+fastqc PYIIIT_2.fastq
+
+#In the Denoising stage, DADA2 will be employed to filter out sequences, remove chimeras, denoise paired-end sequnences, trimm each raw read and 
+#finally merge them.
+
+qiime dada2 denoise-paired --i-demultiplexed-seqs pairedenddemuxAIIIT.qza --p-trim-left-f 9 --p-trim-left-r 9 --p-trunc-len-f 218 --p-trunc-len-r 218 --o-table AIIITtable.qza --o-representative-sequences AIIITrep-seqs.qza --o-denoising-stats AIIITdenoising-stats.qza
+qiime feature-table summarize --i-table AIIITtable.qza --o-visualization AIIITtable.qzv
+qiime feature-table tabulate-seqs --i-data AIIITrep-seqs.qza --o-visualization AIIITrep-seqs.qzv
+qiime metadata tabulate --m-input-file AIIITdenoising-stats.qza --o-visualization AIIITdenoising-stats.qzv
+
+qiime dada2 denoise-paired --i-demultiplexed-seqs pairedenddemuxAIT.qza --p-trim-left-f 9 --p-trim-left-r 9 --p-trunc-len-f 218 --p-trunc-len-r 218 --o-table AITtable.qza --o-representative-sequences AITrep-seqs.qza --o-denoising-stats AITdenoising-stats.qza
+qiime feature-table summarize --i-table AITtable.qza --o-visualization AITtable.qzv
+qiime feature-table tabulate-seqs --i-data AITrep-seqs.qza --o-visualization AITrep-seqs.qzv
+qiime metadata tabulate --m-input-file AITdenoising-stats.qza --o-visualization AITdenoising-stats.qzv
+
+qiime dada2 denoise-paired --i-demultiplexed-seqs pairedenddemuxAIVT.qza --p-trim-left-f 9 --p-trim-left-r 9 --p-trunc-len-f 218 --p-trunc-len-r 218 --o-table AIVTtable.qza --o-representative-sequences AIVTrep-seqs.qza --o-denoising-stats AIVTdenoising-stats.qza
+qiime feature-table summarize --i-table AIVTtable.qza --o-visualization AIVTtable.qzv
+qiime feature-table tabulate-seqs --i-data AIVTrep-seqs.qza --o-visualization AIVTrep-seqs.qzv
+qiime metadata tabulate --m-input-file AIVTdenoising-stats.qza --o-visualization AIVTdenoising-stats.qzv
+
+qiime dada2 denoise-paired --i-demultiplexed-seqs pairedenddemuxAVIIT.qza --p-trim-left-f 9 --p-trim-left-r 9 --p-trunc-len-f 218 --p-trunc-len-r 218 --o-table AVIITtable.qza --o-representative-sequences AVIITrep-seqs.qza --o-denoising-stats AVIITdenoising-stats.qza
+qiime feature-table summarize --i-table AVIITtable.qza --o-visualization AVIITtable.qzv
+qiime feature-table tabulate-seqs --i-data AVIITrep-seqs.qza --o-visualization AVIITrep-seqs.qzv
+qiime metadata tabulate --m-input-file AVIITdenoising-stats.qza --o-visualization AVIITdenoising-stats.qzv
+
+qiime dada2 denoise-paired --i-demultiplexed-seqs pairedenddemuxPSIT.qza --p-trim-left-f 9 --p-trim-left-r 9 --p-trunc-len-f 218 --p-trunc-len-r 218 --o-table PSITtable.qza --o-representative-sequences PSITrep-seqs.qza --o-denoising-stats PSITdenoising-stats.qza
+qiime feature-table summarize --i-table PSITtable.qza --o-visualization PSITtable.qzv
+qiime feature-table tabulate-seqs --i-data PSITrep-seqs.qza --o-visualization PSITrep-seqs.qzv
+qiime metadata tabulate --m-input-file PSITdenoising-stats.qza --o-visualization PSITdenoising-stats.qzv
+
+qiime dada2 denoise-paired --i-demultiplexed-seqs pairedenddemuxPSIIIT.qza --p-trim-left-f 9 --p-trim-left-r 9 --p-trunc-len-f 218 --p-trunc-len-r 218 --o-table PSIIITtable.qza --o-representative-sequences PSIIITrep-seqs.qza --o-denoising-stats PSIIITdenoising-stats.qza
+qiime feature-table summarize --i-table PSIIITtable.qza --o-visualization PSIIITtable.qzv
+qiime feature-table tabulate-seqs --i-data PSIIITrep-seqs.qza --o-visualization PSIIITrep-seqs.qzv
+qiime metadata tabulate --m-input-file PSIIITdenoising-stats.qza --o-visualization PSIIITdenoising-stats.qzv
+
+qiime dada2 denoise-paired --i-demultiplexed-seqs pairedenddemuxPSIVT.qza --p-trim-left-f 9 --p-trim-left-r 9 --p-trunc-len-f 218 --p-trunc-len-r 218 --o-table PSIVTtable.qza --o-representative-sequences PSIVTrep-seqs.qza --o-denoising-stats PSIVTdenoising-stats.qza
+qiime feature-table summarize --i-table PSIVTtable.qza --o-visualization PSIVTtable.qzv
+qiime feature-table tabulate-seqs --i-data PSIVTrep-seqs.qza --o-visualization PSIVTrep-seqs.qzv
+qiime metadata tabulate --m-input-file PSIVTdenoising-stats.qza --o-visualization PSIVTdenoising-stats.qzv
+
+qiime dada2 denoise-paired --i-demultiplexed-seqs pairedenddemuxPSVIIT.qza --p-trim-left-f 9 --p-trim-left-r 9 --p-trunc-len-f 218 --p-trunc-len-r 218 --o-table PSVIITtable.qza --o-representative-sequences PSVIITrep-seqs.qza --o-denoising-stats PSVIITdenoising-stats.qza
+qiime feature-table summarize --i-table PSVIITtable.qza --o-visualization PSVIITtable.qzv
+qiime feature-table tabulate-seqs --i-data PSVIITrep-seqs.qza --o-visualization PSVIITrep-seqs.qzv
+qiime metadata tabulate --m-input-file PSVIITdenoising-stats.qza --o-visualization PSVIITdenoising-stats.qzv
+
+qiime dada2 denoise-paired --i-demultiplexed-seqs pairedenddemuxPYIT.qza --p-trim-left-f 9 --p-trim-left-r 9 --p-trunc-len-f 218 --p-trunc-len-r 218 --o-table PYITtable.qza --o-representative-sequences PYITrep-seqs.qza --o-denoising-stats PYITdenoising-stats.qza
+qiime feature-table summarize --i-table PYITtable.qza --o-visualization PYITtable.qzv
+qiime feature-table tabulate-seqs --i-data PYITrep-seqs.qza --o-visualization PYITrep-seqs.qzv
+qiime metadata tabulate --m-input-file PYITdenoising-stats.qza --o-visualization PYITdenoising-stats.qzv
+
+qiime dada2 denoise-paired --i-demultiplexed-seqs pairedenddemuxPYIIIT.qza --p-trim-left-f 9 --p-trim-left-r 9 --p-trunc-len-f 218 --p-trunc-len-r 218 --o-table PYIIITtable.qza --o-representative-sequences PYIIITrep-seqs.qza --o-denoising-stats PYIIITdenoising-stats.qza
+qiime feature-table summarize --i-table PYIIITtable.qza --o-visualization PYIIITtable.qzv
+qiime feature-table tabulate-seqs --i-data PYIIITrep-seqs.qza --o-visualization PYIIITrep-seqs.qzv
+qiime metadata tabulate --m-input-file PYIIITdenoising-stats.qza --o-visualization PYIIITdenoising-stats.qzv
+
+qiime dada2 denoise-paired --i-demultiplexed-seqs pairedenddemuxPYIVT.qza --p-trim-left-f 9 --p-trim-left-r 9 --p-trunc-len-f 218 --p-trunc-len-r 218 --o-table PYIVTtable.qza --o-representative-sequences PYIVTrep-seqs.qza --o-denoising-stats PYIVTdenoising-stats.qza
+qiime feature-table summarize --i-table PYIVTtable.qza --o-visualization PYIVTtable.qzv
+qiime feature-table tabulate-seqs --i-data PYIVTrep-seqs.qza --o-visualization PYIVTrep-seqs.qzv
+qiime metadata tabulate --m-input-file PYIVTdenoising-stats.qza --o-visualization PYIVTdenoising-stats.qzv
+
+qiime dada2 denoise-paired --i-demultiplexed-seqs pairedenddemuxPYVIIT.qza --p-trim-left-f 9 --p-trim-left-r 9 --p-trunc-len-f 218 --p-trunc-len-r 218 --o-table PYVIITtable.qza --o-representative-sequences PYVIITrep-seqs.qza --o-denoising-stats PYVIITdenoising-stats.qza
+qiime feature-table summarize --i-table PYVIITtable.qza --o-visualization PYVIITtable.qzv
+qiime feature-table tabulate-seqs --i-data PYVIITrep-seqs.qza --o-visualization PYVIITrep-seqs.qzv
+qiime metadata tabulate --m-input-file PYVIITdenoising-stats.qza --o-visualization PYVIITdenoising-stats.qzv
+
+#ITS Taxonomy 
+
+#UNITE database (v.10.0) will be used to train a "classify-sklearn" classifier with a Naive-Bayes classifier. Fasta (representative sequences)
+#and .txt (taxonomy files) are downloaded from the developer file of the database to start the classifier training as follows:
+
+qiime tools import --type 'FeatureData[Sequence]' --input-path sh_refs_qiime_ver10_dynamic_04.04.2024_dev.fasta --output-path sh_refs_qiime_ver10_dynamic_04.04-2024_dev.qza
+qiime tools import --type 'FeatureData[Taxonomy]' --input-format HeadrelessTSVTaxonomyFormat --input-path sh_taxonomy_qiime_ver10_dynamic_04.04.2024_de.txt --output-path ref-unitedev-taxonomy.qza
+
+qiime feature-classifier fit-classifier-naive-bayes --i-reference-reads sh_refs_qiime_ver10_dynamic_04-04.2024_dev.qza --i-reference-taxonomy ref-unitedev-taxonomy.qza --o-classifier classifierunitedev.qza
+
+#The created rep-seqs an tables are merged by sample: AIIIT, AIT, AIVT and AVIIT into one rep-seqs and table file (with its respecetive .qzv 
+#archives). The same is done for PS and PY. This will simplify all the analysis from this point and beyond.
+
+qiime feature-table merge --i-tables AIIITtable.qza --i-tables AITtable.qza --i-tables AIVTtable.qza --i-tables AVIITtable.qza --o-merged-table aguamielsamplestable.qza
+qiime feature-table summarize --i-table aguamielsamplestable.qza --o-visualization aguamielsamplestable.qzv
+
+qiime feature-table merge-seqs --i-data AIIITrep-seqs.qza --i-data AITrep-seqs.qza --i-data AIVTrep-seqs.qza --i-data AVIITrep-seqs.qza --o-merged-data aguamielsamplesarep-seqs.qza
+qiime feature-table tabulate-seqs --i-data aguamielsamplesarep-seqs.qza --o-visualization aguamielsamplesarep-seqs.qzv
+
+qiime feature-table merge --i-tables PSIIITtable.qza --i-tables PSITtable.qza --i-tables PSIVTtable.qza --i-tables PSVIITtable.qza --o-merged-table pulquesemillasamplestable.qza
+qiime feature-table summarize --i-table pulquesemillasamplestable.qza --o-visualization pulquesemillasamplestable.qzv
+
+qiime feature-table merge-seqs --i-data PSIIITrep-seqs.qza --i-data PSITrep-seqs.qza --i-tables PSIVTrep-seqs.qza --i-data PSVIITrep-seqs.qza --o-merged-data pulquesemillasamplesrep-seqs.qza
+qiime feature-table tabulate-seqs --i-data pulquesemillasamplesrep-seqs.qza --o-visualization pulquesemillasamplesrep-seqs.qzv
+mv pulquesemillasamplesrep-seqs.qzv pulquestartersamplesrep-seqs.qzv
+mv pulquesemillasamplesrep-seqs.qza pulquestartersamplesrep-seqs.qza
+
+qiime feature-table merge --i-tables PYITtable.qza --i-tables PYIIITtable.qza --i-tables PYVIITtable.qza --i-table PYIVTtable.qza --o-merged-table pulquejovensamplestables.qza
+qiime feature-table summarize --i-table pulquejovensamplestable.qza --o-visualization pulquejovensamplestable.qzv
+
+qiime feature-table merge-seqs --i-data PYITrep-seqs.qza --i-data PYIIITrep-seqs.qza --i-data PYIVTrep-seqs.qza --i-data PYVIITrep-seqs.qza --o-merged-data pulquejovensamplesrep-seqs.qza
+qiime feature-table tabulate-seqs --i-data pulquejovensamplesrep-seqs.qza --o-visualization pulquejovensamplesrep-seqs.qzv 
+
+#Metadata is associated to each table.qzv created as follows:
+
+qiime feature-table summarize --i-table aguamielsamplestable.qza --o-visualization aguamielsamplestable.qzv --m-sample-metadata-file aguamiel\ metadata.tsv
+
+qiime feature-table summarize --i-table pulquejovensamplestable.qza --o-visualization pulquejovensamplestable.qzv --m-sample-metadata-file pulquejoven\ metadata.tsv
+
+qiime feature-table summarize --i-table pulquesemillasamplestable.qza --o-visualization pulquestartersamplestable.qzv --m-sample-metadata-file pulquesemilla\ metadata.tsv
+
+#Back to taxonomy...
+
+qiime feature-classifier classify-sklearn --i-classifier classifierunitedev.qza --i-reads aguamielsamplesarep-seqs.qza --o-classification aguamielitstaxonomy.qza
+qiime metadata tabulate --m-input-file aguamielitstaxonomy.qza --o-visualization aguamielitstaxonomy.qzv
+
+qiime feature-classifier classify-sklearn --i-classifier classifierunitedev.qza --i-reads pulquejovensamplesrep-seqs.qza --o-classification pulquejovenitstaxonomy.qza
+qiime metadata tabulate --m-input-file pulquejovenitstaxonomy.qza --o-visualization pulquejovenitstaxonomy.qzv
+
+qiime feature-classifier classify-sklearn --i-classifier classifierunitedev.qza --i-reads pulquestartersamplesrep-seqs.qza --o-classification pulquestarteritstaxonomy.qza
+qiime metadata tabulate --m-input-file pulquestarteritstaxonomy.qza --o-visualization pulquestarteritstaxonomy.qzv
+
+#Relative frequency barplots can be generated as follows:
+
+qiime taxa barplot --i-table aguamielsamplestable.qza --i-taxonomy aguamielitstaxonomy.qza --m-metadata-file aguamiel\ metadata.tsv --o-visualization aguamielitstaxa-bar-plots.qzv
+
+qiime taxa barplot --i-table pulquejovensamplestable.qza --i-taxonomy pulquejovenitstaxonomy.qza --m-metadata-file pulquejoven\ metadata.tsv --o-visuaization pulquejovenitstaxa-bar-plots.qzv
+
+qiime taxa barplot --i-table pulquestartersamplestable.qza --i-taxonomy pulquestarteritstaxonomy.qza --m-metadata-file pulquestarter\ metadata.tsv --o-visualization pulquestarteritstaxa-bar-plots.qzv
+
+#Beta diversity analysis
+
+qiime phylogeny align-to-tree-mafft-fasttree --i-sequences aguamielsamplesarep-seqs.qza --o-alignment aguamielalignedrep-seqs.qza --o-masked-alignment masked-aligned-aguamielsamplesarep-seqs.qza --o-tree aguamielsamplesunrooted-tree.qza --o-rooted-tree aguamielsamplesrooted-tree.qza 
+
+qiime phylogeny align-to-tree-mafft-fasttree --i-sequences pulquejovensamplesrep-seqs.qza --o-alignment pulquejovenalignedrep-seqs.qza --o-masked-alignment masked-aligned-pulquejovensamplesrep-seqs.qza --o-tree pulquejovensamplesunrooted-tree.qza --o-rooted-tree pulquejovensamplesrooted-tree.qza
+
+qiime phylogeny align-to-tree-mafft-fasttree --i-sequences pulquestartersamplesrep-seqs.qza --o-alignment pulquestarteralignedrep-seqs.qza --o-masked-alignment masked-aligned-pulquestartersamplesrep-seqs.qza --o-tree pulquestartersamplesunrooted-tree.qza --o-rooted-tree pulquestartersamplesrooted-tree.qza
+
+#For the diversity analysis, first alpha rarefaction curves are created to determine the sampling depth (which is used afterwards in the beta diversity
+#analysis):
+
+qiime diversity alpha-rarefaction --i-table aguamielsamplestable.qza --i-phylogeny aguamielsamplesrooted-tree.qza --p-max-depth 162950 --o-visualization aguamielsamples-alpha-rarefaction.qzv
+qiime diversity core-metrics-phylogenetic --i-phylogeny aguamielsamplesrooted-tree.qza --i-table aguamielsamplestable.qza --p-sampling-depth 97550 --m-metadata-file aguamiel\ metadata.tsv --output-dir aguamiel-core-metrics-results
+
+qiime diversity alpha-rarefaction --i-table pulquestartersamplestable.qza --i-phylogeny pulquestartersamplesrooted-tree.qza --p-max-depth 186406 --o-visualization pulquestartersamples-alpha-rarefaction.qzv
+qiime diversity core-metrics-phylogenetic --i-phylogeny pulquestartersamplesrooted-tree.qza --i-table pulquestartersamplestable.qza --p-sampling-depth 184200 --m-metadata-file pulquestarter\ metadata.tsv --output-dir pulquestarter-core-metrics-results
+
+qiime diversity alpha-rarefaction --i-table pulquejovensamplestable.qza --i-phylogeny pulquejovensamplesrooted-tree.qza --p-max-depth 184360 --o-visualization pulquejovensamples-alpha-rarefaction.qzv
+#In this case, there is compromise on the sampling depth since two of the three diversity metrics analyzed/created with the alpha rarefaction
+#curve show a 40,000 sampling depth is enough to capture most of the diversity without discarding any sample. But just one metric marks a 100,000
+#sampling depth min. to capture most of the diversity, but then the only sample associated with a different pulque producing region would be lost.
+
+#A sampling depth of 46,770 is then chosen:
+qiime diversity core-metrics-phylogenetic --i-phylogeny pulquejovensamplesrooted-tree.qza --i-table pulquejovensamplestable.qza --p-sampling-depth 46770 --m-metadata-file pulquejoven\ metadata.tsv --output-dir pulquejoven-core-metrics-results
+
+#Alpha diversity analysis.
+
+#Chao1
+qiime diversity alpha --i-table aguamielsamplestable.qza --p-metric chao1 --o-alpha-diversity chao1aguamielits.qza
+qiime diversity alpha-group-significance --i-alpha-diversity chao1aguamielits.qza --m-metadata-file aguamiel\ metadata.tsv --o-visualization chao1aguamielits.qzv
+
+qiime diversity alpha --i-table pulquejovensamplestable.qza --p-metric chao1 --o-alpha-diversity chao1pulquejovenits.qza
+qiime diversity alpha-group-significance --i-alpha-diversity chao1pulquejovenits.qza --m-metadata-file pulquejoven\ metadata.tsv --o-visualization chao1pulquejovenits.qzv
+
+qiime diversity alpha --i-table pulquestartersamplestable.qza --p-metric chao1 --o-alpha-diversity chao1pulquestarterits.qza
+qiime diversity alpha-group-significance --i-alpha-diversity chao1pulquestarterits.qza --m-metadata-file pulquestarter\ metadata.tsv --o-visualization chao1pulquestarterits.qzv
+
+#Shannon-Wiener
+qiime diversity alpha --i-table aguamielsamplestable.qza --p-metric shannon --o-alpha-diversity shannonaguamielits.qza
+qiime diversity alpha-group-signficance --i-alpha-diversity shannonaguamielits.qza --m-metadata-file aguamiel\ metedata.tsv --o-visualization shannonguamielits.qzv
+
+qiime diversity alpha --i-table pulquejovensamplestable.qza --p-metric shannon --o-alpha-diversity shannonpulquejovenits.qza
+qiime diversity alpha-group-significance --i-alpha-diversity shannonpulquejovenits.qza --m-metadata-file pulquejoven\ metadata.tsv --o-visualization shannonpulquejovenits.qzv
+
+qiime diversity alpha --i-table pulquestartersamplestable.qza --p-metric shannon --o-alpha-diversity shannonpulquestarterits.qza 
+qiime diversity alpha-group-significance --i-alpha-diversity shannonpulquestarterits.qza --m-metadata-file pulquestarter\ metadata.tsv --o-visualization shannonpulquestarterits.qzv
+
+#Simpson Evenness
+qiime diversity alpha --i-table aguamielsamplestable.qza --p-metric simpson_e --o-alpha-diversity simpsonaguamielits.qza 
+qiime dviersity alpha-group-significance --i-alpha-diversity simpsonaguamielits.qza --m-metadata-file aguamiel\ metadata.tsv --o-visualization simpsonaguamielits.qzv
+
+qiime diversity alpha --i-table pulquejovensamplestable.qza --p-metric simpson_e --o-alpha-diversity simpsonpulquejovenits.qza
+qiime diversity alpha-group-significance --i-alpha-diversity simpsonpulquejovenits.qza --m-metadata-file pulquejoven\ metadata.tsv --o-visualization simpsonpulquejovenits.qzv
+
+qiime diversity alpha --i-table pulquestartersamplestable.qza --p-metric simpson_e --o-alpha-diversity simpsonpulquestarterits.qza
+qiime diversity alpha-group-significance --i-alpha-diversity simpsonpulquestarterits.qza --m-metadata-file pulquestarter\ metadata.tsv --o-visualization simpsonpulquestarteritrs.qzv
+
