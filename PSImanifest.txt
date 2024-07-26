@@ -1,0 +1,2 @@
+sample-id	forward-absolute-filepath	reverse-absolute-filepath
+PSI	/home/marco/v3v4/PSI_1.fastq	/home/marco/v3v4/PSI_2.fastq

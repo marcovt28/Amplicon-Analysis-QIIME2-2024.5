@@ -1,0 +1,2 @@
+sample-id	forward-absolute-filepath	reverse-absolute-filepath
+PYIV	/home/marco/v3v4/PYIV_1.fastq	/home/marco/v3v4/PYIV_2.fastq

@@ -1,0 +1,2 @@
+sample-id	forward-absolute-filepath	reverse-absolute-filepath
+AIII	/home/marco/v3v4/AIII_1.fastq	/home/marco/v3v4/AIII_2.fastq
