@@ -408,34 +408,33 @@ qiime feature-table summarize --i-table pulquejovenv3v4samplestable.qza --o-visu
 qiime feature-table merge-seqs --i-data PYIIIrep-seqsprueba.qza --i-data PYIrep-seqsprueba.qza --i-data PYIVrep-seqsprueba.qza --i-data PYVIIrep-seqsprueba.qza --o-merged-data pulquejovenv3v4samplesrep-seqs.qza
 qiime feature-table tabulate-seqs --i-data pulquejovenv3v4samplesrep-seqs.qza --o-visualization pulquejovenv3v4samplesrep-seqs.qzv 
 
-
-#_____________________________________________________________________________________________________________________
 #Metadata is associated to each table.qzv created as follows:
 
-qiime feature-table summarize --i-table aguamielsamplestable.qza --o-visualization aguamielsamplestable.qzv --m-sample-metadata-file aguamiel\ metadata.tsv
+qiime feature-table summarize --i-table aguamielv3v4samplestable.qza --o-visualization aguamielv3v4samplestable.qzv --m-sample-metadata-file aguamiel\ metadata.tsv
 
-qiime feature-table summarize --i-table pulquejovensamplestable.qza --o-visualization pulquejovensamplestable.qzv --m-sample-metadata-file pulquejoven\ metadata.tsv
+qiime feature-table summarize --i-table pulquejovenv3v4samplestable.qza --o-visualization pulquejovenv3v4samplestable.qzv --m-sample-metadata-file pulquejoven\ metadata.tsv
 
-qiime feature-table summarize --i-table pulquesemillasamplestable.qza --o-visualization pulquestartersamplestable.qzv --m-sample-metadata-file pulquesemilla\ metadata.tsv
+qiime feature-table summarize --i-table pulquestarterv3v4samplestable.qza --o-visualization pulquestarterv3v4samplestable.qzv --m-sample-metadata-file pulquesemilla\ metadata.tsv
 
 #Back to taxonomy...
 
-qiime feature-classifier classify-sklearn --i-classifier classifierunitedev.qza --i-reads aguamielsamplesarep-seqs.qza --o-classification aguamielitstaxonomy.qza
-qiime metadata tabulate --m-input-file aguamielitstaxonomy.qza --o-visualization aguamielitstaxonomy.qzv
+qiime feature-classifier classify-sklearn --i-classifier silvaclassifier.qza --i-reads aguamielv3v4samplesrep-seqs.qza --o-classification aguamielv3v4taxonomy.qza
+qiime metadata tabulate --m-input-file aguamielv3v4taxonomy.qza --o-visualization aguamielv3v4taxonomy.qzv
 
-qiime feature-classifier classify-sklearn --i-classifier classifierunitedev.qza --i-reads pulquejovensamplesrep-seqs.qza --o-classification pulquejovenitstaxonomy.qza
-qiime metadata tabulate --m-input-file pulquejovenitstaxonomy.qza --o-visualization pulquejovenitstaxonomy.qzv
+qiime feature-classifier classify-sklearn --i-classifier silvaclassifier.qza --i-reads pulquejovenv3v4samplesrep-seqs.qza --o-classification pulquejovenv3v4taxonomy.qza
+qiime metadata tabulate --m-input-file pulquejovenv3v4taxonomy.qza --o-visualization pulquejovenv3v4taxonomy.qzv
 
-qiime feature-classifier classify-sklearn --i-classifier classifierunitedev.qza --i-reads pulquestartersamplesrep-seqs.qza --o-classification pulquestarteritstaxonomy.qza
-qiime metadata tabulate --m-input-file pulquestarteritstaxonomy.qza --o-visualization pulquestarteritstaxonomy.qzv
+qiime feature-classifier classify-sklearn --i-classifier sivlaclassifier.qza --i-reads pulquestarterv3v4samplesrep-seqs.qza --o-classification pulquestarterv3v4taxonomy.qza
+qiime metadata tabulate --m-input-file pulquestarterv3v4taxonomy.qza --o-visualization pulquestarterv3v4taxonomy.qzv
 
 #Relative frequency barplots can be generated as follows:
 
-qiime taxa barplot --i-table aguamielsamplestable.qza --i-taxonomy aguamielitstaxonomy.qza --m-metadata-file aguamiel\ metadata.tsv --o-visualization aguamielitstaxa-bar-plots.qzv
+qiime taxa barplot --i-table aguamielv3v4samplestable.qza --i-taxonomy aguamielv3v4taxonomy.qza --m-metadata-file aguamiel\ metadata.tsv --o-visualization aguamielv3v4taxa-bar-plots.qzv
 
-qiime taxa barplot --i-table pulquejovensamplestable.qza --i-taxonomy pulquejovenitstaxonomy.qza --m-metadata-file pulquejoven\ metadata.tsv --o-visuaization pulquejovenitstaxa-bar-plots.qzv
+qiime taxa barplot --i-table pulquejovenv3v4samplestable.qza --i-taxonomy pulquejovenv3v4taxonomy.qza --m-metadata-file pulquejoven\ metadata.tsv --o-visuaization pulquejovenv3v4taxa-bar-plots.qzv
 
-qiime taxa barplot --i-table pulquestartersamplestable.qza --i-taxonomy pulquestarteritstaxonomy.qza --m-metadata-file pulquestarter\ metadata.tsv --o-visualization pulquestarteritstaxa-bar-plots.qzv
+qiime taxa barplot --i-table pulquestarterv3v4samplestable.qza --i-taxonomy pulquestarterv3v4taxonomy.qza --m-metadata-file pulquestarter\ metadata.tsv --o-visualization pulquestarterv3v4taxa-bar-plots.qzv
+#_______________________________________________________________________________________________________________________-
 
 #Beta diversity analysis
 
