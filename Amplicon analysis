@@ -3,6 +3,8 @@
 conda update -n base -c conda-forge conda
 conda activate qiime2-amplicon-2024.5
 
+#We highly suggest to create two separate files to store the metadata archives and the different outputs that will be created 
+#for the ITS1-5F and V3-V4 analysis independently.
 
 ###ITS1-5F analysis
 
@@ -236,13 +238,13 @@ qiime diversity alpha-group-significance --i-alpha-diversity shannonpulquestarte
 
 #Simpson Evenness
 qiime diversity alpha --i-table aguamielsamplestable.qza --p-metric simpson_e --o-alpha-diversity simpsonaguamielits.qza 
-qiime dviersity alpha-group-significance --i-alpha-diversity simpsonaguamielits.qza --m-metadata-file aguamiel\ metadata.tsv --o-visualization simpsonaguamielits.qzv
+qiime diversity alpha-group-significance --i-alpha-diversity simpsonaguamielits.qza --m-metadata-file aguamiel\ metadata.tsv --o-visualization simpsonaguamielits.qzv
 
 qiime diversity alpha --i-table pulquejovensamplestable.qza --p-metric simpson_e --o-alpha-diversity simpsonpulquejovenits.qza
 qiime diversity alpha-group-significance --i-alpha-diversity simpsonpulquejovenits.qza --m-metadata-file pulquejoven\ metadata.tsv --o-visualization simpsonpulquejovenits.qzv
 
 qiime diversity alpha --i-table pulquestartersamplestable.qza --p-metric simpson_e --o-alpha-diversity simpsonpulquestarterits.qza
-qiime diversity alpha-group-significance --i-alpha-diversity simpsonpulquestarterits.qza --m-metadata-file pulquestarter\ metadata.tsv --o-visualization simpsonpulquestarteritrs.qzv
+qiime diversity alpha-group-significance --i-alpha-diversity simpsonpulquestarterits.qza --m-metadata-file pulquestarter\ metadata.tsv --o-visualization simpsonpulquestarterits.qzv
 
 
 
@@ -434,62 +436,57 @@ qiime taxa barplot --i-table aguamielv3v4samplestable.qza --i-taxonomy aguamielv
 qiime taxa barplot --i-table pulquejovenv3v4samplestable.qza --i-taxonomy pulquejovenv3v4taxonomy.qza --m-metadata-file pulquejoven\ metadata.tsv --o-visuaization pulquejovenv3v4taxa-bar-plots.qzv
 
 qiime taxa barplot --i-table pulquestarterv3v4samplestable.qza --i-taxonomy pulquestarterv3v4taxonomy.qza --m-metadata-file pulquestarter\ metadata.tsv --o-visualization pulquestarterv3v4taxa-bar-plots.qzv
-#_______________________________________________________________________________________________________________________-
 
 #Beta diversity analysis
 
-qiime phylogeny align-to-tree-mafft-fasttree --i-sequences aguamielsamplesarep-seqs.qza --o-alignment aguamielalignedrep-seqs.qza --o-masked-alignment masked-aligned-aguamielsamplesarep-seqs.qza --o-tree aguamielsamplesunrooted-tree.qza --o-rooted-tree aguamielsamplesrooted-tree.qza 
+qiime phylogeny align-to-tree-mafft-fasttree --i-sequences aguamielv3v4samplesrep-seqs.qza --o-alignment aguamielv3v4alignedrep-seqs.qza --o-masked-alignment masked-aligned-aguamielv3v4samplesrep-seqs.qza --o-tree aguamielv3v4unrooted-tree.qza --o-rooted-tree aguamielsamplesrooted-tree.qza 
 
-qiime phylogeny align-to-tree-mafft-fasttree --i-sequences pulquejovensamplesrep-seqs.qza --o-alignment pulquejovenalignedrep-seqs.qza --o-masked-alignment masked-aligned-pulquejovensamplesrep-seqs.qza --o-tree pulquejovensamplesunrooted-tree.qza --o-rooted-tree pulquejovensamplesrooted-tree.qza
+qiime phylogeny align-to-tree-mafft-fasttree --i-sequences pulquejovenv3v4samplesrep-seqs.qza --o-alignment pulquejovenv3v4alignedrep-seqs.qza --o-masked-alignment masked-aligned-pulquejovenv3v4samplesrep-seqs.qza --o-tree pulquejovenv3v4unrooted-tree.qza --o-rooted-tree pulquejovenv3v4samplesrooted-tree.qza
 
-qiime phylogeny align-to-tree-mafft-fasttree --i-sequences pulquestartersamplesrep-seqs.qza --o-alignment pulquestarteralignedrep-seqs.qza --o-masked-alignment masked-aligned-pulquestartersamplesrep-seqs.qza --o-tree pulquestartersamplesunrooted-tree.qza --o-rooted-tree pulquestartersamplesrooted-tree.qza
+qiime phylogeny align-to-tree-mafft-fasttree --i-sequences pulquestarterv3v4samplesrep-seqs.qza --o-alignment pulquestarterv3v4samplesalignedrep-seqs.qza --o-masked-alignment masked-aligned-pulquestarterv3v4samplesrep-seqs.qza --o-tree pulquestarterv3v4samplesunrooted-tree.qza --o-rooted-tree pulquestarterv3v4samplesrooted-tree.qza
 
 #For the diversity analysis, first alpha rarefaction curves are created to determine the sampling depth (which is used afterwards in the beta diversity
 #analysis):
 
-qiime diversity alpha-rarefaction --i-table aguamielsamplestable.qza --i-phylogeny aguamielsamplesrooted-tree.qza --p-max-depth 162950 --o-visualization aguamielsamples-alpha-rarefaction.qzv
-qiime diversity core-metrics-phylogenetic --i-phylogeny aguamielsamplesrooted-tree.qza --i-table aguamielsamplestable.qza --p-sampling-depth 97550 --m-metadata-file aguamiel\ metadata.tsv --output-dir aguamiel-core-metrics-results
+qiime diversity alpha-rarefaction --i-table aguamielv3v4samplestable.qza --i-phylogeny aguamielsamplesrooted-tree.qza --p-max-depth 177808 --o-visualization aguamielsamples-alpha-rarefaction.qzv
+qiime diversity core-metrics-phylogenetic --i-phylogeny aguamielsamplesrooted-tree.qza --i-table aguamielv3v4samplestable.qza --p-sampling-depth 175610 --m-metadata-file aguamiel\ metadata.tsv --output-dir aguamielv3v4-core-metrics-results
 
-qiime diversity alpha-rarefaction --i-table pulquestartersamplestable.qza --i-phylogeny pulquestartersamplesrooted-tree.qza --p-max-depth 186406 --o-visualization pulquestartersamples-alpha-rarefaction.qzv
-qiime diversity core-metrics-phylogenetic --i-phylogeny pulquestartersamplesrooted-tree.qza --i-table pulquestartersamplestable.qza --p-sampling-depth 184200 --m-metadata-file pulquestarter\ metadata.tsv --output-dir pulquestarter-core-metrics-results
+qiime diversity alpha-rarefaction --i-table pulquestarterv3v4samplestable.qza --i-phylogeny pulquestarterv3v4samplesrooted-tree.qza --p-max-depth 173476 --o-visualization pulquestarterv3v4samples-alpha-rarefaction.qzv
+qiime diversity core-metrics-phylogenetic --i-phylogeny pulquestarterv3v4samplesrooted-tree.qza --i-table pulquestarterv3v4samplestable.qza --p-sampling-depth 160670 --m-metadata-file pulquestarter\ metadata.tsv --output-dir pulquestarterv3v4-core-metrics-results
 
-qiime diversity alpha-rarefaction --i-table pulquejovensamplestable.qza --i-phylogeny pulquejovensamplesrooted-tree.qza --p-max-depth 184360 --o-visualization pulquejovensamples-alpha-rarefaction.qzv
-#In this case, there is compromise on the sampling depth since two of the three diversity metrics analyzed/created with the alpha rarefaction
-#curve show a 40,000 sampling depth is enough to capture most of the diversity without discarding any sample. But just one metric marks a 100,000
-#sampling depth min. to capture most of the diversity, but then the only sample associated with a different pulque producing region would be lost.
-
-#A sampling depth of 46,770 is then chosen:
-qiime diversity core-metrics-phylogenetic --i-phylogeny pulquejovensamplesrooted-tree.qza --i-table pulquejovensamplestable.qza --p-sampling-depth 46770 --m-metadata-file pulquejoven\ metadata.tsv --output-dir pulquejoven-core-metrics-results
+qiime diversity alpha-rarefaction --i-table pulquejovenv3v4samplestable.qza --i-phylogeny pulquejovenv3v4samplesrooted-tree.qza --p-max-depth 178022 --o-visualization pulquejovenv3v4samples-alpha-rarefaction.qzv
+qiime diversity core-metrics-phylogenetic --i-phylogeny pulquejovenv3v4samplesrooted-tree.qza --i-table pulquejovenv3v4samplestable.qza --p-sampling-depth 175710 --m-metadata-file pulquejoven\ metadata.tsv --output-dir pulquejovenv3v4-core-metrics-results
 
 #Alpha diversity analysis.
 
 #Chao1
-qiime diversity alpha --i-table aguamielsamplestable.qza --p-metric chao1 --o-alpha-diversity chao1aguamielits.qza
-qiime diversity alpha-group-significance --i-alpha-diversity chao1aguamielits.qza --m-metadata-file aguamiel\ metadata.tsv --o-visualization chao1aguamielits.qzv
+qiime diversity alpha --i-table aguamielv3v4samplestable.qza --p-metric chao1 --o-alpha-diversity chao1aguamielv3v4.qza
+qiime diversity alpha-group-significance --i-alpha-diversity chaoaguamielv3v4.qza --m-metadata-file aguamiel\ metadata.tsv --o-visualization chaoaguamielv3v4.qzv
 
-qiime diversity alpha --i-table pulquejovensamplestable.qza --p-metric chao1 --o-alpha-diversity chao1pulquejovenits.qza
-qiime diversity alpha-group-significance --i-alpha-diversity chao1pulquejovenits.qza --m-metadata-file pulquejoven\ metadata.tsv --o-visualization chao1pulquejovenits.qzv
+qiime diversity alpha --i-table pulquejovenv3v4samplestable.qza --p-metric chao1 --o-alpha-diversity chaopulquejovenv3v4.qza
+qiime diversity alpha-group-significance --i-alpha-diversity chaopulquejovenv3v4.qza --m-metadata-file pulquejoven\ metadata.tsv --o-visualization chaopulquejovenv3v4.qzv
 
-qiime diversity alpha --i-table pulquestartersamplestable.qza --p-metric chao1 --o-alpha-diversity chao1pulquestarterits.qza
-qiime diversity alpha-group-significance --i-alpha-diversity chao1pulquestarterits.qza --m-metadata-file pulquestarter\ metadata.tsv --o-visualization chao1pulquestarterits.qzv
+qiime diversity alpha --i-table pulquestarterv3v4samplestable.qza --p-metric chao1 --o-alpha-diversity chaopulquestarterv3v4.qza
+qiime diversity alpha-group-significance --i-alpha-diversity chaopulquestarterv3v4.qza --m-metadata-file pulquestarter\ metadata.tsv --o-visualization chaopulquestarterv3v4.qzv
 
 #Shannon-Wiener
-qiime diversity alpha --i-table aguamielsamplestable.qza --p-metric shannon --o-alpha-diversity shannonaguamielits.qza
-qiime diversity alpha-group-signficance --i-alpha-diversity shannonaguamielits.qza --m-metadata-file aguamiel\ metedata.tsv --o-visualization shannonguamielits.qzv
+qiime diversity alpha --i-table aguamielv3v4samplestable.qza --p-metric shannon --o-alpha-diversity shannonaguamielv3v4.qza
+qiime diversity alpha-group-signficance --i-alpha-diversity shannonaguamielv3v4.qza --m-metadata-file aguamiel\ metedata.tsv --o-visualization shannonguamielv3v4.qzv
 
-qiime diversity alpha --i-table pulquejovensamplestable.qza --p-metric shannon --o-alpha-diversity shannonpulquejovenits.qza
-qiime diversity alpha-group-significance --i-alpha-diversity shannonpulquejovenits.qza --m-metadata-file pulquejoven\ metadata.tsv --o-visualization shannonpulquejovenits.qzv
+qiime diversity alpha --i-table pulquejovenv3v4samplestable.qza --p-metric shannon --o-alpha-diversity shannonpulquejovenv3v4.qza
+qiime diversity alpha-group-significance --i-alpha-diversity shannonpulquejovenv3v4.qza --m-metadata-file pulquejoven\ metadata.tsv --o-visualization shannonpulquejovenv3v4.qzv
 
-qiime diversity alpha --i-table pulquestartersamplestable.qza --p-metric shannon --o-alpha-diversity shannonpulquestarterits.qza 
-qiime diversity alpha-group-significance --i-alpha-diversity shannonpulquestarterits.qza --m-metadata-file pulquestarter\ metadata.tsv --o-visualization shannonpulquestarterits.qzv
+qiime diversity alpha --i-table pulquestarterv3v4samplestable.qza --p-metric shannon --o-alpha-diversity shannonpulquestarterv3v4.qza 
+qiime diversity alpha-group-significance --i-alpha-diversity shannonpulquestarterv3v4.qza --m-metadata-file pulquestarter\ metadata.tsv --o-visualization shannonpulquestarterv3v4.qzv
 
+#___
 #Simpson Evenness
-qiime diversity alpha --i-table aguamielsamplestable.qza --p-metric simpson_e --o-alpha-diversity simpsonaguamielits.qza 
-qiime dviersity alpha-group-significance --i-alpha-diversity simpsonaguamielits.qza --m-metadata-file aguamiel\ metadata.tsv --o-visualization simpsonaguamielits.qzv
+qiime diversity alpha --i-table aguamielv3v4samplestable.qza --p-metric simpson_e --o-alpha-diversity simpsoneaguamielv3v4.qza 
+qiime diversity alpha-group-significance --i-alpha-diversity simpsoneaguamielv3v4.qza --m-metadata-file aguamiel\ metadata.tsv --o-visualization simpsoneaguamielv3v4.qzv
 
-qiime diversity alpha --i-table pulquejovensamplestable.qza --p-metric simpson_e --o-alpha-diversity simpsonpulquejovenits.qza
-qiime diversity alpha-group-significance --i-alpha-diversity simpsonpulquejovenits.qza --m-metadata-file pulquejoven\ metadata.tsv --o-visualization simpsonpulquejovenits.qzv
+qiime diversity alpha --i-table pulquejovenv3v4samplestable.qza --p-metric simpson_e --o-alpha-diversity simpsonepulquejovenv3v4.qza
+qiime diversity alpha-group-significance --i-alpha-diversity simpsonepulquejovenv3v4.qza --m-metadata-file pulquejoven\ metadata.tsv --o-visualization simpsonepulquejovenv3v4.qzv
 
-qiime diversity alpha --i-table pulquestartersamplestable.qza --p-metric simpson_e --o-alpha-diversity simpsonpulquestarterits.qza
-qiime diversity alpha-group-significance --i-alpha-diversity simpsonpulquestarterits.qza --m-metadata-file pulquestarter\ metadata.tsv --o-visualization simpsonpulquestarteritrs.qzv
+qiime diversity alpha --i-table pulquestarterv3v4samplestable.qza --p-metric simpson_e --o-alpha-diversity simpsonepulquestarterv3v4.qza
+qiime diversity alpha-group-significance --i-alpha-diversity simpsonepulquestarterv3v4.qza --m-metadata-file pulquestarter\ metadata.tsv --o-visualization simpsonepulquestarterv3v4.qzv
 
